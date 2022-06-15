@@ -28,7 +28,7 @@ class Tags extends Component
    * @return void
    */
   public function __construct($item, $layout = 'tags-layout-1', $buttonClasses = 'btn btn-primary m-1',
-                              $buttonColor = 'white', $buttonSizeLabel = '12', $buttonWithLabel = true, $titleClass = 'h5 text-primary',
+                              $buttonColor = 'white', $buttonSizeLabel = '12', $buttonWithLabel = true, $titleClass = 'h5',
                               $buttonStyle = "", $buttonOnclick = "", $buttonWithIcon = false, $buttonIconClass = "",
                               $buttonTarget = "", $buttonIconPosition = "left", $buttonIconColor = 'currentcolor')
   {

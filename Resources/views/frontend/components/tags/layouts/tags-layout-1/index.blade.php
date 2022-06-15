@@ -1,7 +1,7 @@
 <div class="tag">
   @if(!$item->tags->isEmpty())
     <br>
-    <p class="{{$titleClass}}">{{trans('tag::tag.list')}}</p>
+    <p class="title-tag {{$titleClass}}">{{trans('tag::tag.list')}}</p>
     <span class="tags-links">
       @foreach($item->tags as $tag)
         <x-isite::button buttonClasses="{{$buttonClasses}}"
