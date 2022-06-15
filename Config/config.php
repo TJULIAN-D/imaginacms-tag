@@ -84,5 +84,14 @@ return [
     'withViewMoreButton' => true,
     'withSummary' => false,
   ],
+  /*
+   * Define repositories by Entities
+   */
+  'buttonTag' => [
+    'Modules\Iblog\Entities\Category' => 'Modules\Iblog\Repositories\CategoryRepository',
+    'Modules\Page\Entities\Page' => 'Modules\Page\Repositories\PageRepository',
+    'Modules\Iplaces\Entities\Place' => 'Modules\Iplaces\Repositories\PlaceRepository',
+    'Modules\Icommerce\Entities\Product' => 'Modules\Icommerce\Repositories\ProductRepository',
+  ],
 
 ];
