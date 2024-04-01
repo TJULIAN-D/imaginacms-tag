@@ -12,27 +12,43 @@ trait TaggableTrait
 {
     protected static $tagsModel = Tag::class;
 
-    public static function getTagsModel(): string
-    {
-        return static::$tagsModel;
-    }
+  public static function bootTaggableTrait()
+  {
+    //Listen event after create model
+    static::createdWithBindings(function ($model) {
+      $model->syncTags($model->getEventBindings('createdWithBindings'));
+    });
+    //Listen event after update model
+    static::updatedWithBindings(function ($model) {
+      $model->syncTags($model->getEventBindings('updatedWithBindings'));
+    });
+  }
+
+  public function syncTags($params)
+  {
+    $this->setTags($params['data']['tags'] ?? []);
+  }
+
+  public static function getTagsModel(): string
+  {
+    return static::$tagsModel;
+  }
 
     public static function setTagsModel(string $model)
     {
         static::$tagsModel = $model;
     }
 
-    public function scopeWhereTag(Builder $query, $tags, string $type = 'slug'): Builder
-    {
-        $query->with('translations');
+  public function scopeWhereTag(Builder $query, $tags, string $type = 'slug'): Builder
+  {
+    $tags = is_array($tags) ? $tags : explode(' ', trim($tags));
 
-        foreach (Arr::wrap($tags) as $tag) {
-            $query->whereHas('tags', function (Builder $query) use ($type, $tag) {
-                $query->whereHas('translations', function (Builder $query) use ($type, $tag) {
-                    $query->where($type, $tag);
-                });
-            });
-        }
+    $query->whereIn('id', function ($q) use ($tags) {
+      $q->from('tag__tagged')
+        ->select('tag__tagged.taggable_id')
+        ->leftJoin('tag__tag_translations', 'tag__tag_translations.tag_id', '=', 'tag__tagged.tag_id')
+        ->whereIn('tag__tag_translations.slug', $tags);
+    });
 
         return $query;
     }
@@ -175,6 +191,11 @@ trait TaggableTrait
         // Replace all separator characters and whitespace by a single separator
         $name = preg_replace('!['.preg_quote($separator, '!').'\s]+!u', $separator, $name);
 
-        return trim($name, $separator);
-    }
+    return trim($name, $separator);
+  }
+
+  public function getNameTags()
+  {
+    return $this->tags->pluck('name')->toArray();
+  }
 }
