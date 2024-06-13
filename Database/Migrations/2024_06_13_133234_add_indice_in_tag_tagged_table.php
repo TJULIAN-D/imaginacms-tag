@@ -11,7 +11,7 @@ class AddIndiceInTagTaggedTable extends Migration
    */
   public function up(): void
   {
-    Schema::create('tag__tagged', function (Blueprint $table) {
+    Schema::table('tag__tagged', function (Blueprint $table) {
       $table->index(['tag_id']);
     });
   }
