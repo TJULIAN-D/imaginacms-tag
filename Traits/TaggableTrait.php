@@ -43,11 +43,11 @@ trait TaggableTrait
   {
     $tags = is_array($tags) ? $tags : explode(' ', trim($tags));
 
-    $query->whereIn('id', function ($q) use ($tags) {
+    $query->whereIn('id', function ($q) use ($tags, $type) {
       $q->from('tag__tagged')
         ->select('tag__tagged.taggable_id')
         ->leftJoin('tag__tag_translations', 'tag__tag_translations.tag_id', '=', 'tag__tagged.tag_id')
-        ->whereIn('tag__tag_translations.slug', $tags);
+        ->whereIn("tag__tag_translations.$type", $tags);
     });
 
         return $query;
